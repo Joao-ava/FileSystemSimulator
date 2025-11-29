@@ -18,6 +18,9 @@ public class CLI {
             if (line.equals("exit")) {
                 break;
             }
+            if (line.isEmpty()) {
+                continue;
+            }
             try {
                 runCommand(line);
             } catch (Exception e) {
