@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.Scanner;
 
 public class CLI {
@@ -25,7 +26,7 @@ public class CLI {
         }
     }
 
-    private void runCommand(String line) {
+    private void runCommand(String line) throws IOException {
         String[] arguments = line.split(" ");
         String command = arguments[0];
         switch (command) {
