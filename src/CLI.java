@@ -41,7 +41,6 @@ public class CLI {
                 break;
             // Listar arquivos de um diretório
             case "ls":
-                // TODO: lidar com ls com comandos
                 if (arguments.length < 2) {
                     System.out.println(currentDirectory);
                     break;
@@ -56,11 +55,14 @@ public class CLI {
             case "cd":
                 currentDirectory = simulator.getDirectory(currentDirectory, arguments[1]);
                 break;
-            // Copiar arquivos
-            // Apagar arquivos
-            // Renomear arquivos
-            // Apagar diretórios
-            // Renomear diretórios
+            case "touch":
+                simulator.createFile(currentDirectory, arguments[1]);
+                break;
+            // TODO: Copiar arquivos
+            // TODO: Apagar arquivos
+            // TODO: Renomear arquivos
+            // TODO: Apagar diretórios
+            // TODO: Renomear diretórios
             default:
                 System.out.println("Command invalido, digite help para ver comandos validos");
                 break;

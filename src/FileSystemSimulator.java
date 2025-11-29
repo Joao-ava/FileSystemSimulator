@@ -29,6 +29,13 @@ public class FileSystemSimulator {
         save();
     }
 
+    public void createFile(Directory directory, String name) throws IOException {
+        String basePath = directory.getParent() == null ? "" : directory.getPath();
+        String path = basePath + "/" + name;
+        directory.addFile(new File(directory, path, ""));
+        save();
+    }
+
     public Directory getDirectory(Directory directory, String path) {
         if (path.equals("/")) {
             return this.root;
@@ -50,7 +57,6 @@ public class FileSystemSimulator {
         }
         return current;
     }
-    // TODO: Apagar diretórios
 
     public void save() throws IOException {
         FileOutputStream file = new FileOutputStream(datPath);
