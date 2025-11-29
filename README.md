@@ -8,7 +8,14 @@ TODO: fazer descrição
 
 ## Arquitetura do Simulador
 
-TODO: fazer descrição
+![Arquitetura do projeto](./assets/img.png)
+
+No projeto a interatividade é lidada pela classe `CLI`, enquanto as
+operações de manipulação do sistema de arquivos e salvar os dados é
+feito pelo `FileSystemSimulator` em que ele tem um atributo que
+representa a raíz do sistema de arquivos a classe `Directory` representa
+um diretório que contem filhos que podem ser outros diretórios ou
+arquivos.
 
 ## Instalação e funcionamento 
 
