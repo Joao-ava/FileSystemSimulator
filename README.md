@@ -12,4 +12,14 @@ TODO: fazer descrição
 
 ## Instalação e funcionamento 
 
-TODO: fazer descrição
+Pelo terminal estando na raiz do projeto (FileSystemSimulator), compile os arquivos com o comando:
+
+```shell
+javac -d out src/*.java src/exceptions/*.java
+```
+
+Execute o programa com 
+
+```shell
+java -cp out Main
+```
