@@ -39,16 +39,29 @@ public class FileSystemSimulator {
         }
 
         String basePath = currentDirectory.getParent() == null ? "" : directory.getPath();
-        String path = basePath + "/" + name;
-        Directory newDirectory = new Directory(directory, path);
+        String path = basePath + "/" + fileName;
+        Directory newDirectory = new Directory(currentDirectory, path);
         currentDirectory.addFile(newDirectory);
         save();
     }
 
     public void createFile(Directory directory, String name) throws IOException {
-        String basePath = directory.getParent() == null ? "" : directory.getPath();
+        Directory currentDirectory = directory;
+        ArrayList<String> parts = new ArrayList<>(Arrays.stream(name.split("/")).toList());
+        String fileName = parts.removeFirst();
+        while (!parts.isEmpty()) {
+            Directory newDirectory = currentDirectory.getChild(fileName);
+            if (newDirectory == null) {
+                createDirectory(currentDirectory, fileName);
+                newDirectory = currentDirectory.getChild(fileName);
+            }
+            currentDirectory = newDirectory;
+            fileName = parts.removeFirst();
+        }
+
+        String basePath = currentDirectory.getParent() == null ? "" : directory.getPath();
         String path = basePath + "/" + name;
-        directory.addFile(new File(directory, path, ""));
+        currentDirectory.addFile(new File(currentDirectory, path, ""));
         save();
     }
 
