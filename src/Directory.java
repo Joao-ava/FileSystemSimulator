@@ -2,6 +2,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import exceptions.FileAlreadyExist;
+
 public class Directory implements Serializable {
     protected String path;
     protected Directory parent;
@@ -53,6 +55,7 @@ public class Directory implements Serializable {
     }
 
     public void addFile(Directory file) {
+        if (getChild(file.getName()) != null) throw new FileAlreadyExist();
         this.children.add(file);
     }
 
