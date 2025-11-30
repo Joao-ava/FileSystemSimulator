@@ -1,6 +1,8 @@
 import exceptions.PathNotFound;
 
 import java.io.*;
+import java.util.Arrays;
+import java.util.ArrayList;
 
 public class FileSystemSimulator {
     private Directory root;
@@ -23,9 +25,23 @@ public class FileSystemSimulator {
     }
 
     public void createDirectory(Directory directory, String name) throws IOException {
-        String basePath = directory.getParent() == null ? "" : directory.getPath();
+        Directory currentDirectory = directory;
+        ArrayList<String> parts = new ArrayList<>(Arrays.stream(name.split("/")).toList());
+        String fileName = parts.removeFirst();
+        while (!parts.isEmpty()) {
+            Directory newDirectory = currentDirectory.getChild(fileName);
+            if (newDirectory == null) {
+                createDirectory(currentDirectory, fileName);
+                newDirectory = currentDirectory.getChild(fileName);
+            }
+            currentDirectory = newDirectory;
+            fileName = parts.removeFirst();
+        }
+
+        String basePath = currentDirectory.getParent() == null ? "" : directory.getPath();
         String path = basePath + "/" + name;
-        directory.addFile(new Directory(directory, path));
+        Directory newDirectory = new Directory(directory, path);
+        currentDirectory.addFile(newDirectory);
         save();
     }
 
