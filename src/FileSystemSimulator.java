@@ -1,3 +1,4 @@
+import exceptions.NotDirectory;
 import exceptions.PathNotFound;
 
 import java.io.*;
@@ -83,6 +84,7 @@ public class FileSystemSimulator {
             if (current == null) {
                 throw new PathNotFound(path);
             }
+            if (current.getType().equals(FileType.FILE)) throw new NotDirectory(path);
         }
         return current;
     }
