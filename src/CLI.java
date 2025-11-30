@@ -35,7 +35,8 @@ public class CLI {
         switch (command) {
             case "help":
                 System.out.println("Comandos:");
-                System.out.println("\tls: para listar os arquivos do diretório atual");
+                System.out.println("\tls: para listar os arquivos do diretório atual.");
+                System.out.println("\tls diretório: para listar os arquivos do diretório informado.");
                 System.out.println("\tmkdir nome-diretório: para criar diretórios.");
                 System.out.println("\tcd diretório: para mudar o diretório atual.");
                 break;
