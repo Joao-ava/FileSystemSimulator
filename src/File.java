@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.time.Instant;
 
 public class File extends Directory implements Serializable {
     private String content;
@@ -7,6 +8,8 @@ public class File extends Directory implements Serializable {
         this.parent = parent;
         this.path = path;
         this.content = content;
+        created = Instant.now();
+        modified = Instant.now();
     }
 
     public String getContent() {
@@ -15,6 +18,7 @@ public class File extends Directory implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+        modified = Instant.now();
     }
 
     public FileType getType() {

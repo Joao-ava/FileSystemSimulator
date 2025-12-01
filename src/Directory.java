@@ -1,4 +1,7 @@
 import java.io.Serializable;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +11,8 @@ public class Directory implements Serializable {
     protected String path;
     protected Directory parent;
     private List<Directory> children;
+    protected Instant created;
+    protected Instant modified;
 
     public Directory() {}
 
@@ -15,6 +20,8 @@ public class Directory implements Serializable {
         this.parent = parent;
         this.path = path;
         children = new ArrayList<>();
+        created = Instant.now();
+        modified = Instant.now();
     }
 
     public String getPath() {
@@ -63,6 +70,18 @@ public class Directory implements Serializable {
         this.children.remove(file);
     }
 
+    public Instant getCreated() {
+        return created;
+    }
+
+    public Instant getModified() {
+        return modified;
+    }
+
+    public void setModified(Instant modified) {
+        this.modified = modified;
+    }
+
     public FileType getType() {
         return FileType.DIRECTORY;
     }
@@ -70,11 +89,20 @@ public class Directory implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         boolean first = true;
+        sb.append("Tipo\tNome\tCriado em\tAtualizado em\n");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+                .withZone(ZoneOffset.ofHours(-3));
         for (Directory file : children) {
             if (!first) {
                 sb.append("\n");
             }
-            sb.append(file.getType()).append("\t").append(file.getName());
+            sb.append(file.getType().toString().substring(0, 4))
+                .append("\t")
+                .append(file.getName())
+                .append("\t")
+                .append(formatter.format(file.getCreated()))
+                .append("\t")
+                .append(formatter.format(file.getModified()));
             first = false;
         }
         return sb.toString();

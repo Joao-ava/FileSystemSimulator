@@ -39,7 +39,7 @@ public class FileSystemSimulator {
             fileName = parts.removeFirst();
         }
 
-        String basePath = currentDirectory.getParent() == null ? "" : directory.getPath();
+        String basePath = currentDirectory.getParent() == null ? "" : currentDirectory.getPath();
         String path = basePath + "/" + fileName;
         Directory newDirectory = new Directory(currentDirectory, path);
         currentDirectory.addFile(newDirectory);
@@ -60,7 +60,7 @@ public class FileSystemSimulator {
             fileName = parts.removeFirst();
         }
 
-        String basePath = currentDirectory.getParent() == null ? "" : directory.getPath();
+        String basePath = currentDirectory.getParent() == null ? "" : currentDirectory.getPath();
         String path = basePath + "/" + name;
         currentDirectory.addFile(new File(currentDirectory, path, ""));
         save();
