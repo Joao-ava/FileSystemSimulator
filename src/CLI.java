@@ -39,6 +39,7 @@ public class CLI {
                 System.out.println("\tls diretório: para listar os arquivos do diretório informado.");
                 System.out.println("\tmkdir nome-diretório: para criar diretórios.");
                 System.out.println("\tcd diretório: para mudar o diretório atual.");
+                System.out.println("\tmv-dir original novo: renomea o nome do diretório.");
                 break;
             // Listar arquivos de um diretório
             case "ls":
@@ -64,6 +65,9 @@ public class CLI {
             // TODO: Renomear arquivos
             // TODO: Apagar diretórios
             // TODO: Renomear diretórios
+            case "mv-dir":
+                simulator.renameDirectory(currentDirectory, arguments[1], arguments[2]);
+                break;
             default:
                 System.out.println("Command invalido, digite help para ver comandos validos");
                 break;

@@ -40,6 +40,11 @@ public class Directory implements Serializable {
         return parent;
     }
 
+    public void rename(String newName) {
+        String[] parts = this.path.split("/");
+        path = parts[parts.length - 2] +  "/" + newName;
+    }
+
     public void setParent(Directory parent) {
         this.parent = parent;
     }

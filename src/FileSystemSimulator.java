@@ -46,6 +46,11 @@ public class FileSystemSimulator {
         save();
     }
 
+    public void renameDirectory(Directory directory, String oldName, String newName) throws IOException {
+        Directory target = getDirectory(directory, oldName);
+        target.rename(newName);
+    }
+
     public void createFile(Directory directory, String name) throws IOException {
         Directory currentDirectory = directory;
         ArrayList<String> parts = new ArrayList<>(Arrays.stream(name.split("/")).toList());
