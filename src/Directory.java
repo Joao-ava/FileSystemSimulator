@@ -28,6 +28,10 @@ public class Directory implements Serializable {
         return path;
     }
 
+    public void setPath(String path) {
+        this.path = path;
+    }
+
     public String getName() {
         if (parent == null) {
             return path;
@@ -73,6 +77,10 @@ public class Directory implements Serializable {
 
     public void removeFile(Directory file) {
         this.children.remove(file);
+    }
+
+    public void setCreated(Instant created) {
+        this.created = created;
     }
 
     public Instant getCreated() {
