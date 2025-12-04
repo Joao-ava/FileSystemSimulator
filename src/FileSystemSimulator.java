@@ -174,7 +174,7 @@ public class FileSystemSimulator {
                 break;
             case DELETE_DIR:
                 if (arguments.length < 1) {
-                    throw new Exception("Uso: rm-dir <nome-antigo>");
+                    throw new Exception("Uso: rmdir <nome-antigo>");
                 }
                 // TODO: Apagar diretórios
                 break;
@@ -186,7 +186,7 @@ public class FileSystemSimulator {
                 break;
             case RENAME_DIR:
                 if (arguments.length < 2) {
-                    throw new Exception("Uso: mv-dir <nome-antigo> <nome-novo>");
+                    throw new Exception("Uso: mvdir <nome-antigo> <nome-novo>");
                 }
                 return renameDirectory(directory, arguments[0], arguments[1]);
             case RENAME_FILE:

@@ -76,10 +76,10 @@ public class CLI {
             case "mv":
                 simulator.runOperation(FileOperation.RENAME_FILE, currentDirectory, slice(arguments));
                 break;
-            case "rm-dir":
+            case "rmdir":
                 simulator.runOperation(FileOperation.RENAME_DIR, currentDirectory, slice(arguments));
                 break;
-            case "mv-dir":
+            case "mvdir":
                 simulator.runOperation(FileOperation.CREATE_DIR, currentDirectory, slice(arguments));
                 break;
             default:
