@@ -1,4 +1,6 @@
+import exceptions.FileAlreadyExist;
 import exceptions.NotDirectory;
+import exceptions.NotFile;
 import exceptions.PathNotFound;
 
 import java.io.*;
@@ -132,7 +134,7 @@ public class FileSystemSimulator {
             if (directory.getChild(newName) != null) {
                 throw new RuntimeException("Já existe um arquivo com o nome: " + newName);
             }
-            if (fileToRename.getType() != FileType.FILE) throw new RuntimeException("O caminho especificado não é um arquivo");
+            if (fileToRename.getType() != FileType.FILE) throw new NotFile(fileToRename.getPath());
 
             String basePath = directory.getParent() == null ? "" : directory.getPath();
             String newPath = basePath + "/" + newName;
@@ -165,7 +167,7 @@ public class FileSystemSimulator {
                 throw new PathNotFound(name);
             }
             if (target.getType() == FileType.DIRECTORY) {
-                throw new RuntimeException("O caminho especificado não é um arquivo");
+                throw new NotFile(target.getPath());
             }
 
             currentDirectory.removeFile(target);
@@ -194,6 +196,48 @@ public class FileSystemSimulator {
         }
     }
 
+    public Directory getFile(Directory directory, String name) throws PathNotFound {
+        Directory currentDirectory = directory;
+        ArrayList<String> parts = new ArrayList<>(Arrays.stream(name.split("/")).toList());
+        String fileName = parts.removeFirst();
+        while (!parts.isEmpty()) {
+            Directory newDirectory = currentDirectory.getChild(fileName);
+            if (newDirectory == null) {
+                throw new PathNotFound(fileName);
+            }
+            currentDirectory = newDirectory;
+            fileName = parts.removeFirst();
+        }
+
+        return currentDirectory.getChild(name);
+    }
+
+    public Directory copyFile(Directory directory, String originName, String targetName) throws IOException {
+        try {
+            Directory origin = getFile(directory, originName);
+            if (origin == null) throw new PathNotFound(originName);
+
+            if (origin.getType() == FileType.DIRECTORY)
+                throw new NotFile(origin.getPath());
+
+            if (getFile(directory, targetName) != null)
+                throw new FileAlreadyExist();
+
+            File sourceFile = (File) origin;
+
+            setEnabledJournal(false);
+            File target = (File) createFile(directory, targetName);
+            setEnabledJournal(true);
+            target.setContent(sourceFile.getContent());
+
+            save();
+            logOperation(FileOperation.COPY_FILE, directory, new String[]{originName, targetName}, true);
+            return target;
+        } catch (Exception e) {
+            logOperation(FileOperation.COPY_FILE, directory, new String[]{originName, targetName}, false);
+            throw e;
+        }
+    }
 
     public Directory getDirectory(Directory directory, String path) {
         if (path.equals("/")) {
@@ -242,20 +286,17 @@ public class FileSystemSimulator {
                 if (arguments.length < 2) {
                     throw new Exception("Uso: cp <nome-antigo> <nome-novo>");
                 }
-                // TODO: Copiar arquivos
-                break;
+                return copyFile(directory, arguments[0], arguments[1]);
             case DELETE_DIR:
                 if (arguments.length < 1) {
                     throw new Exception("Uso: rmdir <nome-antigo>");
                 }
-                // TODO: Apagar diretórios
                 deleteDirectory(directory, arguments[0]);
                 break;
             case DELETE_FILE:
                 if (arguments.length < 1) {
                     throw new Exception("Uso: rm <nome-antigo>");
                 }
-                // TODO: Apagar arquivos
                 deleteFile(directory, arguments[0]);
                 break;
             case RENAME_DIR:
