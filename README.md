@@ -86,3 +86,5 @@ Estão disponiveis os seguintes comandos:
 - clear                   - Limpar a tela
 - exit                    - Sair do simulador
 
+[Link para o github](https://github.com/Joao-ava/FileSystemSimulator).
+
