@@ -36,6 +36,18 @@ public class CLI {
             case "help":
                 printHelp();
                 break;
+            case "pwd":
+                System.out.println(currentDirectory.getPath());
+                break;
+            case "journal":
+                simulator.getJournal().printLog();
+                break;
+            case "clear":
+                int lines = 50;
+                for (int i = 0; i < lines; i++) {
+                    System.out.println();
+                }
+                break;
             // Listar arquivos de um diretório
             case "ls":
                 if (arguments.length < 2) {
@@ -96,6 +108,8 @@ public class CLI {
         System.out.println();
         System.out.println("Sistema:");
         System.out.println("\thelp                    - Exibir esta mensagem de ajuda");
+        System.out.println("\tjournal                 - Exibir journal");
+        System.out.println("\tclear                   - Limpar a tela");
         System.out.println("\texit                    - Sair do simulador");
         System.out.println();
     }
