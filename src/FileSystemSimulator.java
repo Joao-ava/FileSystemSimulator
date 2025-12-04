@@ -94,6 +94,52 @@ public class FileSystemSimulator {
         return current;
     }
 
+    public void runOperation(FileOperation operation, Directory directory, String[] arguments) throws Exception {
+        switch (operation) {
+            case CREATE_DIR:
+                if (arguments.length < 1) {
+                    throw new Exception("Uso: mkdir <nome-diretório>");
+                }
+                createDirectory(directory, arguments[0]);
+                break;
+            case CREATE_FILE:
+                if (arguments.length < 2) {
+                    throw new Exception("Uso: touch <nome-arquivo>");
+                }
+                createFile(directory, arguments[0]);
+            case COPY_FILE:
+                if (arguments.length < 2) {
+                    throw new Exception("Uso: cp <nome-antigo> <nome-novo>");
+                }
+                // TODO: Copiar arquivos
+                break;
+            case DELETE_DIR:
+                if (arguments.length < 1) {
+                    throw new Exception("Uso: rm-dir <nome-antigo>");
+                }
+                // TODO: Apagar diretórios
+                break;
+            case DELETE_FILE:
+                if (arguments.length < 1) {
+                    throw new Exception("Uso: rm <nome-antigo>");
+                }
+                // TODO: Apagar arquivos
+                break;
+            case RENAME_DIR:
+                if (arguments.length < 2) {
+                    throw new Exception("Uso: mv-dir <nome-antigo> <nome-novo>");
+                }
+                renameDirectory(directory, arguments[0], arguments[1]);
+                break;
+            case RENAME_FILE:
+                if (arguments.length < 2) {
+                    throw new Exception("Uso: mv <nome-antigo> <nome-novo>");
+                }
+                // TODO: Renomear arquivos
+                break;
+        }
+    }
+
     public void save() throws IOException {
         FileOutputStream file = new FileOutputStream(datPath);
         ObjectOutputStream output = new ObjectOutputStream(file);
