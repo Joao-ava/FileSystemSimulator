@@ -80,9 +80,9 @@ Estão disponiveis os seguintes comandos:
 - rmdir <diretório>       - Remover diretório
 - mvdir <antigo> <novo>   - Renomear diretório
 
-Sistema:
-help                    - Exibir esta mensagem de ajuda
-journal                 - Exibir journal
-clear                   - Limpar a tela
-exit                    - Sair do simulador
+**Sistema:**
+- help                    - Exibir esta mensagem de ajuda
+- journal                 - Exibir journal
+- clear                   - Limpar a tela
+- exit                    - Sair do simulador
 
