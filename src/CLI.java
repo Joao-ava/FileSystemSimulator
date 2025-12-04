@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class CLI {
@@ -77,10 +76,10 @@ public class CLI {
                 simulator.runOperation(FileOperation.RENAME_FILE, currentDirectory, slice(arguments));
                 break;
             case "rmdir":
-                simulator.runOperation(FileOperation.RENAME_DIR, currentDirectory, slice(arguments));
+                simulator.runOperation(FileOperation.DELETE_DIR, currentDirectory, slice(arguments));
                 break;
             case "mvdir":
-                simulator.runOperation(FileOperation.CREATE_DIR, currentDirectory, slice(arguments));
+                simulator.runOperation(FileOperation.RENAME_DIR, currentDirectory, slice(arguments));
                 break;
             default:
                 System.out.println("Command invalido, digite help para ver comandos validos");

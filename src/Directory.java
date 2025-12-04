@@ -30,6 +30,7 @@ public class Directory implements Serializable {
 
     public void setPath(String path) {
         this.path = path;
+        modified = Instant.now();
     }
 
     public String getName() {
@@ -47,6 +48,7 @@ public class Directory implements Serializable {
     public void rename(String newName) {
         String[] parts = this.path.split("/");
         path = parts[parts.length - 2] +  "/" + newName;
+        modified = Instant.now();
     }
 
     public void setParent(Directory parent) {

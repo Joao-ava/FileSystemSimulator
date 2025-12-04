@@ -68,13 +68,12 @@ public class FileSystemSimulator {
             if (directory.getChild(newName) != null) {
                 throw new RuntimeException("Já existe um diretório com o nome: " + newName);
             }
-            target.rename(newName);
             String oldPath = target.getPath();
-            String basePath = target.getParent() == null ? "" : target.getParent().getPath();
+            String basePath = target.getParent() == root ? "" : target.getParent().getPath();
             String newPath = basePath + "/" + newName;
             updatePathRecursively(target, oldPath, newPath);
             save();
-            logOperation(FileOperation.RENAME_DIR, directory, new String[]{oldName, newName}, false);
+            logOperation(FileOperation.RENAME_DIR, directory, new String[]{oldName, newName}, true);
             return target;
         } catch (IOException e) {
             logOperation(FileOperation.RENAME_DIR, directory, new String[]{oldName, newName}, false);
@@ -120,6 +119,27 @@ public class FileSystemSimulator {
         } catch (IOException e) {
             logOperation(FileOperation.CREATE_FILE, directory, new String[]{name}, false);
             throw new IOException();
+        }
+    }
+
+    public void renameFile(Directory directory, String oldName, String newName) throws IOException {
+        try {
+            Directory fileToRename = directory.getChild(oldName);
+            if (fileToRename == null) throw new PathNotFound(oldName);
+
+            if (directory.getChild(newName) != null) {
+                throw new RuntimeException("Já existe um arquivo com o nome: " + newName);
+            }
+            if (fileToRename.getType() != FileType.FILE) throw new RuntimeException("O caminho especificado não é um arquivo");
+
+            String basePath = directory.getParent() == null ? "" : directory.getPath();
+            String newPath = basePath + "/" + newName;
+            fileToRename.setPath(newPath);
+            save();
+            logOperation(FileOperation.RENAME_FILE, directory, new String[]{oldName, newName}, true);
+        } catch (Exception e) {
+            logOperation(FileOperation.RENAME_FILE, directory, new String[]{oldName, newName}, false);
+            throw e;
         }
     }
 
@@ -193,7 +213,7 @@ public class FileSystemSimulator {
                 if (arguments.length < 2) {
                     throw new Exception("Uso: mv <nome-antigo> <nome-novo>");
                 }
-                // TODO: Renomear arquivos
+                renameFile(directory, arguments[0], arguments[1]);
                 break;
         }
         return null;
