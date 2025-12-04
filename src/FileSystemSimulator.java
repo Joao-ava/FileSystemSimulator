@@ -14,11 +14,13 @@ public class FileSystemSimulator {
     public FileSystemSimulator() {
         root = new Directory(null, "/");
         journal = new Journal();
+        enabledJournal = true;
     }
 
     public FileSystemSimulator(Directory root) {
         this.root = root;
         journal = new Journal();
+        enabledJournal = true;
     }
 
     public Directory getRoot() {
@@ -122,7 +124,7 @@ public class FileSystemSimulator {
         }
     }
 
-    public void renameFile(Directory directory, String oldName, String newName) throws IOException {
+    public Directory renameFile(Directory directory, String oldName, String newName) throws IOException {
         try {
             Directory fileToRename = directory.getChild(oldName);
             if (fileToRename == null) throw new PathNotFound(oldName);
@@ -137,11 +139,61 @@ public class FileSystemSimulator {
             fileToRename.setPath(newPath);
             save();
             logOperation(FileOperation.RENAME_FILE, directory, new String[]{oldName, newName}, true);
+            return fileToRename;
         } catch (Exception e) {
             logOperation(FileOperation.RENAME_FILE, directory, new String[]{oldName, newName}, false);
             throw e;
         }
     }
+
+    public void deleteFile(Directory directory, String name) throws IOException {
+        try {
+            Directory currentDirectory = directory;
+            ArrayList<String> parts = new ArrayList<>(Arrays.stream(name.split("/")).toList());
+            String fileName = parts.removeFirst();
+            while (!parts.isEmpty()) {
+                Directory newDirectory = currentDirectory.getChild(fileName);
+                if (newDirectory == null) {
+                    throw new PathNotFound(fileName);
+                }
+                currentDirectory = newDirectory;
+                fileName = parts.removeFirst();
+            }
+
+            Directory target = currentDirectory.getChild(name);
+            if (target == null) {
+                throw new PathNotFound(name);
+            }
+            if (target.getType() == FileType.DIRECTORY) {
+                throw new RuntimeException("O caminho especificado não é um arquivo");
+            }
+
+            currentDirectory.removeFile(target);
+            save();
+            logOperation(FileOperation.DELETE_FILE, directory, new String[]{name}, true);
+        } catch (Exception e) {
+            logOperation(FileOperation.DELETE_FILE, directory, new String[]{name}, false);
+            throw e;
+        }
+    }
+
+    public void deleteDirectory(Directory directory, String name) throws IOException {
+        try {
+            Directory target = getDirectory(directory, name);
+            Directory parent = target.getParent();
+            if (parent == null) throw new RuntimeException("Não pode apagar a raíz.");
+
+            if (target.getType() == FileType.FILE) throw new NotDirectory(target.getPath());
+
+            parent.removeFile(target);
+            save();
+            logOperation(FileOperation.DELETE_DIR, directory, new String[]{name}, true);
+        } catch (Exception e) {
+            logOperation(FileOperation.DELETE_DIR, directory, new String[]{name}, false);
+            throw e;
+        }
+    }
+
 
     public Directory getDirectory(Directory directory, String path) {
         if (path.equals("/")) {
@@ -197,12 +249,14 @@ public class FileSystemSimulator {
                     throw new Exception("Uso: rmdir <nome-antigo>");
                 }
                 // TODO: Apagar diretórios
+                deleteDirectory(directory, arguments[0]);
                 break;
             case DELETE_FILE:
                 if (arguments.length < 1) {
                     throw new Exception("Uso: rm <nome-antigo>");
                 }
                 // TODO: Apagar arquivos
+                deleteFile(directory, arguments[0]);
                 break;
             case RENAME_DIR:
                 if (arguments.length < 2) {
@@ -213,8 +267,7 @@ public class FileSystemSimulator {
                 if (arguments.length < 2) {
                     throw new Exception("Uso: mv <nome-antigo> <nome-novo>");
                 }
-                renameFile(directory, arguments[0], arguments[1]);
-                break;
+                return renameFile(directory, arguments[0], arguments[1]);
         }
         return null;
     }

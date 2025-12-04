@@ -79,6 +79,7 @@ public class Directory implements Serializable {
 
     public void removeFile(Directory file) {
         this.children.remove(file);
+        file.setParent(null);
     }
 
     public void setCreated(Instant created) {
